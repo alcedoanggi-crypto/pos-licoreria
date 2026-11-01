@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set titulo_pagina = cliente.nombre_completo %}
+{% block titulo %}{{ cliente.nombre_completo }} · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Datos del cliente</div>
+      <p class="mb-1"><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+      <p class="mb-1"><strong>Email:</strong> {{ cliente.email or '-' }}</p>
+      <p class="mb-3"><strong>Puntos disponibles:</strong> <span class="badge bg-dorado" style="background: var(--dorado); color: var(--grafito);">{{ cliente.puntos }}</span></p>
+      <a href="{{ url_for('clientes.editar', cliente_id=cliente.id) }}" class="btn btn-sm btn-outline-vino">Editar</a>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-titulo">Historial de compras</div>
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>N° Venta</th><th>Fecha</th><th class="text-end">Total</th><th class="text-end">Puntos</th></tr></thead>
+        <tbody>
+          {% for v in cliente.ventas|sort(attribute='fecha', reverse=True) %}
+          <tr>
+            <td>{{ v.numero_venta }}</td>
+            <td>{{ v.fecha.strftime('%d/%m/%Y') }}</td>
+            <td class="text-end">${{ "%.2f"|format(v.total) }}</td>
+            <td class="text-end">+{{ v.puntos_otorgados }} / -{{ v.puntos_canjeados }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted py-3">Sin compras registradas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

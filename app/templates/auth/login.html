@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión · POS Licorería{% endblock %}
+
+{% block contenido_publico %}
+<div class="pantalla-login">
+  <div class="tarjeta-login">
+    <div class="text-center mb-4">
+      <div class="icono-login"><i class="bi bi-cup-straw"></i></div>
+      <h4 class="mb-0">POS Licorería</h4>
+      <div class="subtitulo small">Punto de venta boutique</div>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" name="recordar" id="recordar">
+        <label class="form-check-label" for="recordar">Recordarme</label>
+      </div>
+      <button type="submit" class="btn btn-dorado w-100">Ingresar <i class="bi bi-arrow-right ms-1"></i></button>
+    </form>
+  </div>
+</div>
+{% endblock %}

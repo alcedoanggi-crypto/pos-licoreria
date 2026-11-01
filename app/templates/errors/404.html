@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set codigo_error = "404" %}
+{% set mensaje_error = "La página que buscas no existe." %}
+{% set icono_error = "bi-signpost-2" %}
+{% block titulo %}404 · No encontrado{% endblock %}
+{% block contenido %}{% include "errors/_error.html" %}{% endblock %}
+{% block contenido_publico %}{% include "errors/_error.html" %}{% endblock %}

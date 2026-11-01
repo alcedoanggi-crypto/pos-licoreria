@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Orden " + orden.numero_orden %}
+{% block titulo %}{{ orden.numero_orden }} · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-titulo">Productos</div>
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Costo unit.</th><th class="text-end">Subtotal</th></tr></thead>
+        <tbody>
+          {% for d in orden.detalles %}
+          <tr>
+            <td>{{ d.producto.nombre }}</td>
+            <td class="text-end">{{ d.cantidad }}</td>
+            <td class="text-end">${{ "%.2f"|format(d.costo_unitario) }}</td>
+            <td class="text-end">${{ "%.2f"|format(d.subtotal) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr><th colspan="3" class="text-end">Total</th><th class="text-end">${{ "%.2f"|format(orden.total) }}</th></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Estado</div>
+      <p class="mb-1"><strong>Proveedor:</strong> {{ orden.proveedor.razon_social }}</p>
+      <p class="mb-1"><strong>Creada por:</strong> {{ orden.empleado.nombre_completo }}</p>
+      <p class="mb-1"><strong>Fecha:</strong> {{ orden.fecha_creacion.strftime('%d/%m/%Y') }}</p>
+      <p class="mb-3"><strong>Estado:</strong>
+        {% if orden.estado.value == 'pendiente' %}<span class="badge bg-warning text-dark">Pendiente</span>
+        {% elif orden.estado.value == 'recibida' %}<span class="badge bg-success">Recibida</span>
+        {% else %}<span class="badge bg-secondary">Cancelada</span>{% endif %}
+      </p>
+
+      {% if orden.estado.value == 'pendiente' and current_user.tiene_rol('administrador', 'supervisor') %}
+      <form method="POST" action="{{ url_for('proveedores.ordenes_recibir', orden_id=orden.id) }}" onsubmit="return confirm('¿Confirmar recepción? Esto sumará el stock al inventario.');">
+        <button type="submit" class="btn btn-vino w-100"><i class="bi bi-box-arrow-in-down"></i> Marcar como recibida</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

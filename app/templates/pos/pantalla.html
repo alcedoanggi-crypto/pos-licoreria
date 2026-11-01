@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Punto de venta" %}
+{% block titulo %}Punto de venta · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="pos-layout">
+
+  <div class="pos-carrito-col">
+    <div class="pos-buscador mb-3">
+      <input type="text" id="input-buscar" class="form-control" placeholder="Escanea código de barras o escribe el nombre del producto..." autofocus autocomplete="off">
+      <div id="pos-resultados" class="pos-resultados d-none"></div>
+    </div>
+
+    <div class="pos-carrito-tabla">
+      <table class="table tabla-densa align-middle mb-0">
+        <thead>
+          <tr><th>Producto</th><th class="text-center">Cant.</th><th class="text-end">Precio</th><th class="text-end">Subtotal</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.producto.nombre }}<br><span class="small text-muted">{{ item.producto.presentacion or '' }}</span></td>
+            <td class="text-center">
+              <input type="number" min="1" max="{{ item.producto.stock_actual }}" value="{{ item.cantidad }}"
+                     class="pos-linea-cantidad input-cantidad-pos" data-producto-id="{{ item.producto.id }}">
+            </td>
+            <td class="text-end">${{ "%.2f"|format(item.producto.precio_venta) }}</td>
+            <td class="text-end">${{ "%.2f"|format(item.subtotal) }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-danger btn-quitar-pos" data-producto-id="{{ item.producto.id }}">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-center text-muted py-5">
+            <i class="bi bi-basket" style="font-size:2rem; opacity:0.3;"></i><br>Escanea o busca un producto para comenzar.
+          </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if items %}
+    <button id="btn-vaciar-carrito" class="btn btn-sm btn-outline-secondary mt-2 align-self-start">
+      <i class="bi bi-trash"></i> Vaciar carrito
+    </button>
+    {% endif %}
+  </div>
+
+  <div class="pos-pago-col">
+    <form method="POST" action="{{ url_for('pos.completar_venta') }}" id="form-venta">
+      <div class="alerta-edad mb-3">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="edad_confirmada" id="edad_confirmada" required>
+          <label class="form-check-label" for="edad_confirmada">Confirmo que el cliente es mayor de 18 años</label>
+        </div>
+      </div>
+
+      <div class="panel mb-3">
+        <div class="panel-titulo">Cliente frecuente (opcional)</div>
+        <div class="input-group mb-2">
+          <input type="text" id="input-telefono-cliente" class="form-control" placeholder="Teléfono del cliente">
+          <button type="button" id="btn-buscar-cliente" class="btn btn-outline-vino"><i class="bi bi-search"></i></button>
+        </div>
+        <div id="cliente-info" class="small text-muted">Sin cliente asociado.</div>
+        <input type="hidden" name="cliente_id" id="cliente_id">
+        <div id="bloque-puntos" class="d-none mt-2">
+          <label class="form-label small mb-1">Puntos a canjear (1 pt = ${{ "%.2f"|format(config.VALOR_PUNTO_DESCUENTO) }})</label>
+          <input type="number" min="0" name="puntos_canjear" id="puntos_canjear" class="form-control form-control-sm" value="0">
+        </div>
+      </div>
+
+      <div class="panel mb-3">
+        <div class="panel-titulo">Método de pago</div>
+        <div class="d-flex gap-2">
+          <div class="metodo-pago-btn activo flex-fill" data-metodo="efectivo"><i class="bi bi-cash"></i>Efectivo</div>
+          <div class="metodo-pago-btn flex-fill" data-metodo="tarjeta"><i class="bi bi-credit-card"></i>Tarjeta</div>
+          <div class="metodo-pago-btn flex-fill" data-metodo="mixto"><i class="bi bi-arrow-left-right"></i>Mixto</div>
+        </div>
+        <input type="hidden" name="metodo_pago" id="metodo_pago" value="efectivo">
+
+        <div id="bloque-efectivo" class="mt-3">
+          <label class="form-label small">Monto recibido</label>
+          <input type="text" name="monto_recibido" id="monto_recibido" class="form-control form-control-lg text-end mb-2" value="0.00" readonly>
+          <div class="teclado-numerico">
+            <div class="tecla" data-tecla="7">7</div><div class="tecla" data-tecla="8">8</div><div class="tecla" data-tecla="9">9</div>
+            <div class="tecla" data-tecla="4">4</div><div class="tecla" data-tecla="5">5</div><div class="tecla" data-tecla="6">6</div>
+            <div class="tecla" data-tecla="1">1</div><div class="tecla" data-tecla="2">2</div><div class="tecla" data-tecla="3">3</div>
+            <div class="tecla" data-tecla=".">.</div><div class="tecla" data-tecla="0">0</div><div class="tecla tecla-borrar" data-tecla="borrar"><i class="bi bi-backspace"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pos-total-box mb-3">
+        <div class="etiqueta">Total a pagar</div>
+        <div class="monto" id="total-venta">${{ "%.2f"|format(subtotal * (1 + config.IVA)) }}</div>
+        <div class="small mt-1" id="cambio-venta">Cambio: $0.00</div>
+      </div>
+
+      <button type="submit" class="btn btn-dorado btn-lg w-100" id="btn-completar-venta" {% if not items %}disabled{% endif %}>
+        <i class="bi bi-check-circle"></i> Completar venta
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+  const IVA = {{ config.IVA }};
+  const SUBTOTAL = {{ subtotal }};
+  const VALOR_PUNTO_DESCUENTO = {{ config.VALOR_PUNTO_DESCUENTO }};
+</script>
+<script src="{{ url_for('static', filename='js/pos.js') }}"></script>
+{% endblock %}

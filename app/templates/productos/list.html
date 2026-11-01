@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Productos" %}
+{% block titulo %}Productos · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <a href="{{ url_for('productos.categorias') }}" class="btn btn-outline-vino btn-sm"><i class="bi bi-tags"></i> Categorías</a>
+  {% if current_user.tiene_rol('administrador', 'supervisor') %}
+  <a href="{{ url_for('productos.nuevo') }}" class="btn btn-dorado btn-sm"><i class="bi bi-plus-lg"></i> Nuevo producto</a>
+  {% endif %}
+</div>
+
+<div class="filtros-bar">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-5">
+      <label class="form-label small mb-1">Buscar</label>
+      <input type="text" name="q" value="{{ busqueda }}" class="form-control" placeholder="Nombre, SKU o código de barras">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label small mb-1">Filtro</label>
+      <select name="filtro" class="form-select">
+        <option value="">Todos</option>
+        <option value="stock_bajo" {% if filtro == 'stock_bajo' %}selected{% endif %}>Stock bajo</option>
+        <option value="por_vencer" {% if filtro == 'por_vencer' %}selected{% endif %}>Próximos a vencer</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-vino w-100"><i class="bi bi-search"></i> Filtrar</button>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table tabla-densa align-middle mb-0">
+      <thead>
+        <tr><th>SKU</th><th>Nombre</th><th>Categoría</th><th class="text-end">Precio</th><th class="text-end">Stock</th><th>Vencimiento</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in productos %}
+        <tr>
+          <td>{{ p.sku }}</td>
+          <td>{{ p.nombre }} <span class="small text-muted">{{ p.presentacion or '' }}</span></td>
+          <td>{{ p.categoria.nombre if p.categoria else '-' }}</td>
+          <td class="text-end">${{ "%.2f"|format(p.precio_venta) }}</td>
+          <td class="text-end">
+            <span class="badge {% if p.stock_bajo %}bg-danger{% else %}bg-secondary{% endif %}">{{ p.stock_actual }}</span>
+          </td>
+          <td>
+            {% if p.fecha_vencimiento %}
+              <span class="badge {% if p.proximo_a_vencer %}bg-warning text-dark{% else %}bg-light text-dark{% endif %}">
+                {{ p.fecha_vencimiento.strftime('%d/%m/%Y') }}
+              </span>
+            {% else %}-{% endif %}
+          </td>
+          <td>
+            {% if current_user.tiene_rol('administrador', 'supervisor') %}
+            <a href="{{ url_for('productos.editar', producto_id=p.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-3">Sin productos registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

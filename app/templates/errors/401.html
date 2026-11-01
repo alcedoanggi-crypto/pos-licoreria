@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set codigo_error = "401" %}
+{% set mensaje_error = "Debes iniciar sesión para continuar." %}
+{% set icono_error = "bi-box-arrow-in-right" %}
+{% block titulo %}401 · No autorizado{% endblock %}
+{% block contenido %}{% include "errors/_error.html" %}{% endblock %}
+{% block contenido_publico %}{% include "errors/_error.html" %}{% endblock %}

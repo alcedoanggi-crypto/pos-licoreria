@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Detalle de caja" %}
+{% block titulo %}Detalle de caja · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="panel">
+      <div class="panel-titulo">Resumen del turno</div>
+      <table class="table table-sm mb-0">
+        <tr><th>Cajero</th><td>{{ caja.empleado.nombre_completo }}</td></tr>
+        <tr><th>Apertura</th><td>{{ caja.fecha_apertura.strftime('%d/%m/%Y %H:%M') }} — ${{ "%.2f"|format(caja.monto_apertura) }}</td></tr>
+        <tr><th>Cierre</th><td>{{ caja.fecha_cierre.strftime('%d/%m/%Y %H:%M') if caja.fecha_cierre else 'Turno en curso' }}</td></tr>
+        <tr><th>Ventas totales</th><td>${{ "%.2f"|format(caja.total_ventas) }}</td></tr>
+        <tr><th>Ventas en efectivo</th><td>${{ "%.2f"|format(caja.total_ventas_efectivo) }}</td></tr>
+        {% if caja.monto_sistema is not none %}
+        <tr><th>Sistema (esperado)</th><td>${{ "%.2f"|format(caja.monto_sistema) }}</td></tr>
+        <tr><th>Contado</th><td>${{ "%.2f"|format(caja.monto_contado) }}</td></tr>
+        <tr class="{% if caja.diferencia != 0 %}table-danger{% else %}table-success{% endif %}">
+          <th>Diferencia</th><td>${{ "%.2f"|format(caja.diferencia) }}</td>
+        </tr>
+        {% endif %}
+      </table>
+      {% if caja.observaciones %}<p class="small text-muted mt-2">{{ caja.observaciones }}</p>{% endif %}
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="panel">
+      <div class="panel-titulo">Ventas del turno</div>
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>N° Venta</th><th>Hora</th><th>Método</th><th class="text-end">Total</th></tr></thead>
+        <tbody>
+          {% for v in caja.ventas %}
+          <tr>
+            <td>{{ v.numero_venta }}</td>
+            <td>{{ v.fecha.strftime('%H:%M') }}</td>
+            <td class="text-capitalize">{{ v.metodo_pago.value }}</td>
+            <td class="text-end">${{ "%.2f"|format(v.total) }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted py-3">Sin ventas en este turno.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

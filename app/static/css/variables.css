@@ -1,0 +1,18 @@
+:root {
+  --vino-tinto: #15304D;
+  --vino-tinto-oscuro: #0A1D30;
+  --vino-tinto-claro: #2C5478;
+  --grafito: #2B2B2B;
+  --grafito-claro: #3F3F3F;
+  --dorado: #C9A227;
+  --dorado-claro: #DDBB55;
+  --blanco-calido: #FAF8F5;
+
+  --exito: #3E7A4C;
+  --peligro: #A6382E;
+  --advertencia: #C9A227;
+  --info: #3E6A7A;
+
+  --sombra: 0 3px 14px rgba(43, 43, 43, 0.1);
+  --radio-borde: 8px;
+}

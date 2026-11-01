@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set codigo_error = "500" %}
+{% set mensaje_error = "Ocurrió un error interno. Intenta nuevamente en unos minutos." %}
+{% set icono_error = "bi-exclamation-octagon" %}
+{% block titulo %}500 · Error del servidor{% endblock %}
+{% block contenido %}{% include "errors/_error.html" %}{% endblock %}
+{% block contenido_publico %}{% include "errors/_error.html" %}{% endblock %}

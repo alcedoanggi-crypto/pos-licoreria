@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Cierre diario" %}
+{% block titulo %}Cierre diario · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="filtros-bar">
+  <form method="GET" class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label small mb-1">Fecha</label>
+      <input type="date" name="fecha" value="{{ fecha.isoformat() }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-vino w-100">Consultar</button>
+    </div>
+    <div class="col-md-3">
+      <a href="{{ url_for('reportes.cierre_diario_pdf', fecha=fecha.isoformat()) }}" class="btn btn-outline-vino w-100"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+    </div>
+    <div class="col-md-3">
+      <a href="{{ url_for('reportes.cierre_diario_excel', fecha=fecha.isoformat()) }}" class="btn btn-outline-vino w-100"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+    </div>
+  </form>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="kpi-card kpi-exito">
+      <div class="kpi-icon"><i class="bi bi-cash-stack"></i></div>
+      <div><div class="kpi-value">${{ "{:,.2f}".format(total_dia) }}</div><div class="kpi-label">Total del día</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="kpi-card kpi-info">
+      <div class="kpi-icon"><i class="bi bi-receipt"></i></div>
+      <div><div class="kpi-value">{{ ventas|length }}</div><div class="kpi-label">N° de ventas</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="kpi-card">
+      <div class="kpi-icon"><i class="bi bi-calculator"></i></div>
+      <div><div class="kpi-value">${{ "%.2f"|format(ticket_promedio) }}</div><div class="kpi-label">Ticket promedio</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="panel">
+      <div class="panel-titulo">Ventas del día</div>
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>N° Venta</th><th>Hora</th><th>Cajero</th><th>Método</th><th class="text-end">Total</th></tr></thead>
+        <tbody>
+          {% for v in ventas %}
+          <tr>
+            <td>{{ v.numero_venta }}</td>
+            <td>{{ v.fecha.strftime('%H:%M') }}</td>
+            <td>{{ v.empleado.nombre_completo }}</td>
+            <td class="text-capitalize">{{ v.metodo_pago.value }}</td>
+            <td class="text-end">${{ "%.2f"|format(v.total) }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-center text-muted py-3">Sin ventas ese día.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel">
+      <div class="panel-titulo">Arqueo de cajas</div>
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>Cajero</th><th class="text-end">Sistema</th><th class="text-end">Contado</th><th class="text-end">Dif.</th></tr></thead>
+        <tbody>
+          {% for c in cajas %}
+          <tr>
+            <td>{{ c.empleado.nombre_completo }}</td>
+            <td class="text-end">{{ "$%.2f"|format(c.monto_sistema) if c.monto_sistema is not none else '-' }}</td>
+            <td class="text-end">{{ "$%.2f"|format(c.monto_contado) if c.monto_contado is not none else '-' }}</td>
+            <td class="text-end {% if c.diferencia and c.diferencia != 0 %}text-danger fw-bold{% endif %}">
+              {{ "$%.2f"|format(c.diferencia) if c.diferencia is not none else '-' }}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted py-3">Sin cajas ese día.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Editar proveedor" if proveedor else "Nuevo proveedor" %}
+{% block titulo %}{{ titulo_pagina }} · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="panel" style="max-width: 640px;">
+  <form method="POST">
+    <div class="row g-3">
+      <div class="col-12">
+        <label class="form-label">Razón social</label>
+        <input type="text" name="razon_social" class="form-control" value="{{ proveedor.razon_social if proveedor else '' }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Contacto</label>
+        <input type="text" name="contacto_nombre" class="form-control" value="{{ proveedor.contacto_nombre if proveedor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Teléfono</label>
+        <input type="text" name="telefono" class="form-control" value="{{ proveedor.telefono if proveedor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" value="{{ proveedor.email if proveedor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Dirección</label>
+        <input type="text" name="direccion" class="form-control" value="{{ proveedor.direccion if proveedor else '' }}">
+      </div>
+      {% if proveedor %}
+      <div class="col-12 form-check ms-1">
+        <input type="checkbox" class="form-check-input" name="activo" id="activo" {% if proveedor.activo %}checked{% endif %}>
+        <label class="form-check-label" for="activo">Proveedor activo</label>
+      </div>
+      {% endif %}
+    </div>
+    <div class="mt-4 d-flex gap-2">
+      <button type="submit" class="btn btn-vino"><i class="bi bi-check-lg"></i> Guardar</button>
+      <a href="{{ url_for('proveedores.listar') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

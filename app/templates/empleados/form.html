@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Editar empleado" if empleado else "Nuevo empleado" %}
+{% block titulo %}{{ titulo_pagina }} · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="panel" style="max-width: 560px;">
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nombre completo</label>
+      <input type="text" name="nombre_completo" class="form-control" value="{{ empleado.nombre_completo if empleado else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" name="email" class="form-control" value="{{ empleado.email if empleado else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">{{ 'Nueva contraseña (dejar vacío para no cambiar)' if empleado else 'Contraseña' }}</label>
+      <input type="password" name="password" class="form-control" {% if not empleado %}required{% endif %}>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">PIN rápido (opcional, 4 dígitos)</label>
+      <input type="text" name="pin" maxlength="6" class="form-control" value="{{ empleado.pin if empleado else '' }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Rol</label>
+      <select name="rol" class="form-select">
+        {% for r in roles %}
+        <option value="{{ r.value }}" {% if empleado and empleado.rol == r %}selected{% endif %}>{{ r.value|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if empleado %}
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" name="activo" id="activo" {% if empleado.activo %}checked{% endif %}>
+      <label class="form-check-label" for="activo">Empleado activo</label>
+    </div>
+    {% endif %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-vino"><i class="bi bi-check-lg"></i> Guardar</button>
+      <a href="{{ url_for('empleados.listar') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

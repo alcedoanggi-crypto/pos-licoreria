@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Cerrar caja" %}
+{% block titulo %}Cerrar caja · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="panel mx-auto" style="max-width: 520px;">
+  <div class="text-center mb-3">
+    <i class="bi bi-lock" style="font-size: 2.2rem; color: var(--vino-tinto);"></i>
+    <h5 class="mt-2" style="color: var(--vino-tinto);">Arqueo de cierre</h5>
+  </div>
+
+  <table class="table table-sm mb-4">
+    <tr><th>Monto de apertura</th><td class="text-end">${{ "%.2f"|format(caja.monto_apertura) }}</td></tr>
+    <tr><th>Ventas en efectivo del turno</th><td class="text-end">${{ "%.2f"|format(caja.total_ventas_efectivo) }}</td></tr>
+    <tr><th>Ventas totales del turno (todos los métodos)</th><td class="text-end">${{ "%.2f"|format(caja.total_ventas) }}</td></tr>
+    <tr class="fw-bold"><th>Efectivo esperado en caja (sistema)</th><td class="text-end">${{ "%.2f"|format(monto_sistema) }}</td></tr>
+  </table>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Efectivo contado físicamente</label>
+      <input type="number" step="0.01" name="monto_contado" id="monto_contado" class="form-control form-control-lg" required autofocus
+             oninput="calcularDiferencia({{ monto_sistema }})">
+    </div>
+    <div class="alert alert-secondary" id="caja-diferencia">Diferencia: $0.00</div>
+    <div class="mb-3">
+      <label class="form-label">Observaciones (opcional)</label>
+      <textarea name="observaciones" class="form-control" rows="2" placeholder="Explica cualquier diferencia..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-vino w-100 btn-lg"><i class="bi bi-lock"></i> Cerrar caja</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+function calcularDiferencia(sistema) {
+  const contado = parseFloat(document.getElementById('monto_contado').value) || 0;
+  const diferencia = contado - sistema;
+  const caja = document.getElementById('caja-diferencia');
+  caja.textContent = `Diferencia: $${diferencia.toFixed(2)}`;
+  caja.className = 'alert ' + (diferencia === 0 ? 'alert-success' : (diferencia > 0 ? 'alert-info' : 'alert-danger'));
+}
+</script>
+{% endblock %}

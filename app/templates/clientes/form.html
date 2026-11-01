@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Editar cliente" if cliente else "Nuevo cliente" %}
+{% block titulo %}{{ titulo_pagina }} · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="panel" style="max-width: 560px;">
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nombre completo</label>
+      <input type="text" name="nombre_completo" class="form-control" value="{{ cliente.nombre_completo if cliente else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Teléfono</label>
+      <input type="text" name="telefono" class="form-control" value="{{ cliente.telefono if cliente else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email (opcional)</label>
+      <input type="email" name="email" class="form-control" value="{{ cliente.email if cliente else '' }}">
+    </div>
+    {% if cliente %}
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" name="activo" id="activo" {% if cliente.activo %}checked{% endif %}>
+      <label class="form-check-label" for="activo">Cliente activo</label>
+    </div>
+    {% endif %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-vino"><i class="bi bi-check-lg"></i> Guardar</button>
+      <a href="{{ url_for('clientes.listar') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

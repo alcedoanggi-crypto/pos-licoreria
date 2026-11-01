@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Órdenes de compra" %}
+{% block titulo %}Órdenes de compra · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="d-flex justify-content-end mb-3">
+  {% if current_user.tiene_rol('administrador', 'supervisor') %}
+  <a href="{{ url_for('proveedores.ordenes_nueva') }}" class="btn btn-dorado btn-sm"><i class="bi bi-plus-lg"></i> Nueva orden</a>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <table class="table tabla-densa align-middle mb-0">
+    <thead><tr><th>N° Orden</th><th>Proveedor</th><th>Fecha</th><th class="text-end">Total</th><th>Estado</th></tr></thead>
+    <tbody>
+      {% for o in ordenes %}
+      <tr>
+        <td><a href="{{ url_for('proveedores.ordenes_detalle', orden_id=o.id) }}">{{ o.numero_orden }}</a></td>
+        <td>{{ o.proveedor.razon_social }}</td>
+        <td>{{ o.fecha_creacion.strftime('%d/%m/%Y') }}</td>
+        <td class="text-end">${{ "%.2f"|format(o.total) }}</td>
+        <td>
+          {% if o.estado.value == 'pendiente' %}<span class="badge bg-warning text-dark">Pendiente</span>
+          {% elif o.estado.value == 'recibida' %}<span class="badge bg-success">Recibida</span>
+          {% else %}<span class="badge bg-secondary">Cancelada</span>{% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-3">Sin órdenes de compra registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

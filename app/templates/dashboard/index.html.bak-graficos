@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Dashboard" %}
+{% block titulo %}Dashboard · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="kpi-card kpi-exito">
+      <div class="kpi-icon"><i class="bi bi-cash-stack"></i></div>
+      <div><div class="kpi-value">${{ "{:,.2f}".format(ventas_hoy_total) }}</div><div class="kpi-label">Ventas de hoy</div></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="kpi-card kpi-info">
+      <div class="kpi-icon"><i class="bi bi-receipt"></i></div>
+      <div><div class="kpi-value">${{ "%.2f"|format(ticket_promedio) }}</div><div class="kpi-label">Ticket promedio ({{ ventas_hoy_cantidad }} ventas)</div></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="kpi-card">
+      <div class="kpi-icon"><i class="bi bi-star"></i></div>
+      <div><div class="kpi-value" style="font-size:1.15rem;">{{ producto_estrella }}</div><div class="kpi-label">Producto estrella de hoy</div></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="kpi-card kpi-alerta">
+      <div class="kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <div><div class="kpi-value">{{ stock_bajo }}</div><div class="kpi-label">Productos con stock bajo</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Ventas de los últimos 7 días</div>
+      <canvas id="graficoVentasPeriodo" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Productos más vendidos</div>
+      <canvas id="graficoMasVendidos" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Horas pico de venta</div>
+      <canvas id="graficoHorasPico" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="panel">
+      <div class="panel-titulo"><i class="bi bi-calendar-x text-danger"></i> Productos próximos a vencer</div>
+      {% if proximos_a_vencer %}
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>Producto</th><th>Vence</th><th class="text-end">Stock</th></tr></thead>
+        <tbody>
+          {% for p in proximos_a_vencer[:8] %}
+          <tr><td>{{ p.nombre }}</td><td>{{ p.fecha_vencimiento.strftime('%d/%m/%Y') }}</td><td class="text-end">{{ p.stock_actual }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-muted mb-0">No hay productos próximos a vencer.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel">
+      <div class="panel-titulo"><i class="bi bi-safe2"></i> Estado de cajas</div>
+      <p class="mb-0">Cajas abiertas ahora mismo: <strong>{{ cajas_abiertas }}</strong></p>
+      <a href="{{ url_for('caja.historial') }}" class="small d-block mt-2">Ver historial completo &rarr;</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/dashboard-charts.js') }}"></script>
+{% endblock %}

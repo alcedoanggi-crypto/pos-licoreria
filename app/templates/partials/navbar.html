@@ -1,0 +1,15 @@
+<header class="topbar">
+  <div>
+    <h5 class="mb-0" style="color: var(--vino-tinto); font-weight:700;">{{ titulo_pagina|default('') }}</h5>
+  </div>
+  <div class="dropdown">
+    <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+      <i class="bi bi-person-circle fs-5"></i>
+      <span>{{ current_user.nombre_completo }}</span>
+      <span class="badge bg-secondary text-capitalize">{{ current_user.rol.value }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+    </ul>
+  </div>
+</header>

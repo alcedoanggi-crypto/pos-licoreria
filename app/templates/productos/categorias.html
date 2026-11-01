@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set titulo_pagina = "Categorías" %}
+{% block titulo %}Categorías · POS Licorería{% endblock %}
+
+{% block contenido %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-titulo">Nueva categoría</div>
+      <form method="POST">
+        <div class="mb-2">
+          <label class="form-label">Nombre</label>
+          <input type="text" name="nombre" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <input type="text" name="descripcion" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-vino btn-sm w-100">Crear</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel">
+      <table class="table tabla-densa mb-0">
+        <thead><tr><th>Nombre</th><th>Descripción</th><th>Productos</th></tr></thead>
+        <tbody>
+          {% for c in categorias %}
+          <tr><td>{{ c.nombre }}</td><td>{{ c.descripcion or '-' }}</td><td>{{ c.productos|length }}</td></tr>
+          {% else %}
+          <tr><td colspan="3" class="text-center text-muted py-3">Sin categorías registradas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
