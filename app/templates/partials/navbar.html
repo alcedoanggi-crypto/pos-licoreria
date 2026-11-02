@@ -1,15 +1,24 @@
 <header class="topbar">
   <div>
-    <h5 class="mb-0" style="color: var(--vino-tinto); font-weight:700;">{{ titulo_pagina|default('') }}</h5>
+    <h1 class="topbar-titulo">{{ titulo_pagina|default('') }}</h1>
+    <div class="topbar-fecha" id="topbar-fecha"></div>
   </div>
   <div class="dropdown">
-    <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-      <i class="bi bi-person-circle fs-5"></i>
-      <span>{{ current_user.nombre_completo }}</span>
-      <span class="badge bg-secondary text-capitalize">{{ current_user.rol.value }}</span>
+    {% set partes = current_user.nombre_completo.split() %}
+    <button class="btn-usuario" type="button" data-bs-toggle="dropdown">
+      <span class="avatar">{{ (partes[0][0] ~ (partes[1][0] if partes|length > 1 else ''))|upper }}</span>
+      <span>
+        <span class="nombre d-block">{{ current_user.nombre_completo }}</span>
+        <span class="rol d-block">{{ current_user.rol.value }}</span>
+      </span>
+      <i class="bi bi-chevron-down small text-muted"></i>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end">
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
       <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
     </ul>
   </div>
 </header>
+<script>
+  document.getElementById("topbar-fecha").textContent =
+    new Date().toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+</script>

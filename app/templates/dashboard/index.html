@@ -3,6 +3,27 @@
 {% block titulo %}Dashboard · POS Licorería{% endblock %}
 
 {% block contenido %}
+<div class="hero-bienvenida d-flex flex-wrap align-items-center justify-content-between gap-3">
+  <i class="bi bi-cup-straw hero-deco flotar-lento"></i>
+  <div>
+    <div class="saludo" id="saludo-hora">Hola</div>
+    <h2>{{ current_user.nombre_completo.split()[0] }}, así va la licorería hoy</h2>
+    <p>{{ ventas_hoy_cantidad }} ventas registradas · ticket promedio de ${{ "%.2f"|format(ticket_promedio) }}{% if stock_bajo %} · {{ stock_bajo }} productos por reponer{% endif %}</p>
+  </div>
+  <div class="acciones">
+    <a href="{{ url_for('pos.pantalla') }}" class="btn btn-hero brillo"><i class="bi bi-lightning-charge-fill"></i> Nueva venta</a>
+    {% if current_user.tiene_rol('administrador', 'supervisor') %}
+    <a href="{{ url_for('reportes.cierre_diario') }}" class="btn btn-hero-sec"><i class="bi bi-file-earmark-bar-graph"></i> Cierre diario</a>
+    {% endif %}
+  </div>
+</div>
+<script>
+  (function () {
+    var h = new Date().getHours();
+    document.getElementById("saludo-hora").textContent = h < 12 ? "Buenos días" : h < 19 ? "Buenas tardes" : "Buenas noches";
+  })();
+</script>
+
 <div class="row g-3 mb-3">
   <div class="col-md-3">
     <div class="kpi-card kpi-exito">

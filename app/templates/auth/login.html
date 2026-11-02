@@ -2,29 +2,56 @@
 {% block titulo %}Iniciar sesión · POS Licorería{% endblock %}
 
 {% block contenido_publico %}
-<div class="pantalla-login">
-  <div class="tarjeta-login">
-    <div class="text-center mb-4">
-      <div class="icono-login"><i class="bi bi-cup-straw"></i></div>
-      <h4 class="mb-0">POS Licorería</h4>
-      <div class="subtitulo small">Punto de venta boutique</div>
+<div class="login-split">
+  <section class="login-marca">
+    <div class="d-flex align-items-center gap-2">
+      <div class="brand-logo flotar"><i class="bi bi-cup-straw"></i></div>
+      <strong class="fs-5">POS Licorería</strong>
     </div>
 
-    <form method="POST" action="{{ url_for('auth.login') }}">
-      <div class="mb-3">
-        <label class="form-label">Correo electrónico</label>
-        <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autofocus>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Contraseña</label>
-        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-      </div>
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" name="recordar" id="recordar">
-        <label class="form-check-label" for="recordar">Recordarme</label>
-      </div>
-      <button type="submit" class="btn btn-dorado w-100">Ingresar <i class="bi bi-arrow-right ms-1"></i></button>
-    </form>
-  </div>
+    <div class="my-5">
+      <h1 class="aparecer-izq">Vende más rápido, <span>cierra caja sin sorpresas.</span></h1>
+      <p class="lead mt-3 aparecer-izq" style="animation-delay:.15s">Punto de venta para licorerías boutique: escaneo de códigos, control de edad, clientes con puntos y cierre de caja al centavo.</p>
+      <ul class="login-features aparecer-arriba" style="animation-delay:.3s">
+        <li><i class="bi bi-upc-scan"></i> Venta por código de barras o búsqueda instantánea</li>
+        <li><i class="bi bi-shield-check"></i> Verificación de mayoría de edad en cada venta</li>
+        <li><i class="bi bi-safe2"></i> Apertura y arqueo de caja con PIN por cajero</li>
+        <li><i class="bi bi-graph-up-arrow"></i> Dashboard con horas pico y productos estrella</li>
+      </ul>
+    </div>
+
+    <div class="login-ticket aparecer-arriba" style="animation-delay:.5s">
+      <div><div class="num">3</div><div class="txt">Roles</div></div>
+      <div><div class="num">&lt; 5 s</div><div class="txt">Por venta</div></div>
+      <div><div class="num">100%</div><div class="txt">Trazable</div></div>
+    </div>
+  </section>
+
+  <section class="login-form-lado">
+    <div class="login-form-caja">
+      <h2 class="mb-1">Bienvenido de vuelta</h2>
+      <p class="text-muted mb-4">Ingresa con tu cuenta para abrir tu turno.</p>
+
+      <form method="POST" action="{{ url_for('auth.login') }}">
+        <label class="form-label small fw-semibold">Correo electrónico</label>
+        <div class="input-icono mb-3">
+          <i class="bi bi-envelope"></i>
+          <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required autofocus>
+        </div>
+        <label class="form-label small fw-semibold">Contraseña</label>
+        <div class="input-icono mb-3">
+          <i class="bi bi-lock"></i>
+          <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" name="recordar" id="recordar">
+          <label class="form-check-label small" for="recordar">Mantener la sesión iniciada</label>
+        </div>
+        <button type="submit" class="btn btn-ingresar brillo w-100">Ingresar <i class="bi bi-arrow-right ms-1"></i></button>
+      </form>
+
+      <p class="login-pie text-center mt-4 mb-0"><i class="bi bi-exclamation-octagon"></i> Prohibida la venta de alcohol a menores de 18 años.</p>
+    </div>
+  </section>
 </div>
 {% endblock %}

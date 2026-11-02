@@ -1,7 +1,7 @@
 const PALETA = {
-  vino: "#722F37",
-  vinoClaro: "#8B4048",
-  dorado: "#C9A227",
+  vino: "#16263D",
+  vinoClaro: "#8E2C48",
+  dorado: "#E0A93B",
   doradoClaro: "#DDBB55",
   grafito: "#2B2B2B",
 };
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       datasets: [{
         data: ventasPeriodo.valores,
         borderColor: PALETA.vino,
-        backgroundColor: "rgba(114,47,55,0.1)",
+        backgroundColor: "rgba(224,169,59,0.15)",
         fill: true,
         tension: 0.3,
         pointBackgroundColor: PALETA.dorado,

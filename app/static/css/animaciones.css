@@ -1,0 +1,56 @@
+/* =====================================================================
+   Animaciones de presentación (comunes a los tres sistemas)
+===================================================================== */
+
+/* Elementos que flotan suavemente */
+.flotar { animation: flotar 4s ease-in-out infinite; }
+.flotar-lento { animation: flotar 6s ease-in-out infinite; }
+@keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Destello que recorre un botón */
+.brillo { position: relative; overflow: hidden; }
+.brillo::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg); animation: destello 3.2s ease-in-out infinite;
+}
+@keyframes destello { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+
+/* Punto "en vivo" */
+.punto-vivo {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4ADE80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); animation: vivo 1.8s infinite; vertical-align: middle;
+}
+@keyframes vivo { 70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+
+/* Pines del mapa que laten */
+.pulso-pin { transform-box: fill-box; transform-origin: center; animation: pin 2.2s ease-out infinite; }
+@keyframes pin { from { transform: scale(1); opacity: 0.9; } to { transform: scale(3.2); opacity: 0; } }
+
+/* Entradas */
+.aparecer-izq { animation: entrarIzq 0.8s cubic-bezier(.2, .7, .2, 1) both; }
+.aparecer-arriba { animation: entrarArriba 0.7s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes entrarIzq { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes entrarArriba { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Revelado al hacer scroll (lo activa animaciones.js) */
+.revelar { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2, .7, .2, 1); }
+.revelar.visible { opacity: 1; transform: none; }
+
+/* Íconos de KPI con vida */
+.kpi-card:hover .kpi-icon, .kpi-card-admin:hover .kpi-icono { animation: rebote 0.6s ease; }
+@keyframes rebote { 30% { transform: translateY(-6px) rotate(-6deg); } 60% { transform: translateY(0) rotate(4deg); } }
+
+/* Barra de luz en los encabezados oscuros */
+.hero-bienvenida::before, .hero-ops::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.07) 45%, transparent 60%);
+  background-size: 250% 100%; animation: barrido 6s linear infinite;
+}
+@keyframes barrido { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .flotar, .flotar-lento, .brillo::after, .punto-vivo, .pulso-pin, .aparecer-izq, .aparecer-arriba,
+  .hero-bienvenida::before, .hero-ops::before { animation: none !important; }
+  .revelar { opacity: 1; transform: none; }
+}

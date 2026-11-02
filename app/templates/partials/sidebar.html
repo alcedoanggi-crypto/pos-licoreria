@@ -1,15 +1,18 @@
 <nav class="sidebar">
-  <div class="brand"><i class="bi bi-cup-straw"></i> POS <span>Licorería</span></div>
+  <div class="brand">
+    <div class="brand-logo flotar"><i class="bi bi-cup-straw"></i></div>
+    <div class="brand-texto"><strong>POS Licorería</strong><small>Punto de venta</small></div>
+  </div>
 
   {% if caja_abierta %}
-  <div class="caja-estado abierta"><i class="bi bi-unlock"></i> Caja abierta — ${{ "%.2f"|format(caja_abierta.monto_apertura) }}</div>
+  <div class="caja-estado abierta"><span class="punto-estado"></span> Caja abierta · ${{ "%.2f"|format(caja_abierta.monto_apertura) }}</div>
   {% else %}
-  <div class="caja-estado cerrada"><i class="bi bi-lock"></i> Sin caja abierta</div>
+  <div class="caja-estado cerrada"><span class="punto-estado"></span> Sin caja abierta</div>
   {% endif %}
 
   <div class="nav flex-column">
-    <a class="nav-link {% if request.blueprint == 'pos' %}active{% endif %}" href="{{ url_for('pos.pantalla') }}">
-      <i class="bi bi-cash-coin"></i> Punto de venta
+    <a class="nav-link nav-destacado brillo {% if request.blueprint == 'pos' %}active{% endif %}" href="{{ url_for('pos.pantalla') }}">
+      <i class="bi bi-lightning-charge-fill"></i> Nueva venta
     </a>
     <a class="nav-link {% if request.blueprint == 'caja' %}active{% endif %}"
        href="{{ url_for('caja.abrir') if not caja_abierta else url_for('caja.cerrar') }}">
@@ -27,7 +30,7 @@
     {% if current_user.tiene_rol('administrador', 'supervisor') %}
     <div class="nav-section-label">Inventario</div>
     <a class="nav-link {% if request.blueprint == 'productos' %}active{% endif %}" href="{{ url_for('productos.listar') }}">
-      <i class="bi bi-bottles"></i> Productos
+      <i class="bi bi-box-seam"></i> Productos
     </a>
     <a class="nav-link {% if request.blueprint == 'proveedores' %}active{% endif %}" href="{{ url_for('proveedores.listar') }}">
       <i class="bi bi-building"></i> Proveedores
