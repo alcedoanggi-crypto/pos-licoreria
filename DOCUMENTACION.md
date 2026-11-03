@@ -310,6 +310,29 @@ Piezas específicas del pedido:
 - **`.pos-total-box`**: fondo grafito con el monto en dorado, tipografía
   grande (2.2rem) — el número que más importa en la pantalla.
 
+### 7.1 Rediseño visual (tema profesional + animaciones)
+
+El rediseño es una **capa** sobre los estilos originales: no cambia rutas,
+modelos ni lógica, y los `id`/clases que usa el JavaScript siguen iguales.
+
+| Archivo | Rol |
+|---|---|
+| `app/static/css/tema-pro.css` | Tema "Night Bar": paleta, tipografía, sidebar, topbar con avatar, KPI, login dividido |
+| `app/static/css/animaciones.css` | Animaciones reutilizables: `.flotar`, `.brillo`, `.punto-vivo`, `.aparecer-*`, `.revelar` |
+| `app/static/js/animaciones.js` | Contadores de KPI (respetan prefijo `$` y decimales) y revelado con `IntersectionObserver` |
+
+Piezas destacadas:
+
+- **Login dividido** (`auth/login.html`): panel de marca con propuesta de valor y funciones, formulario con íconos.
+- **Banner de bienvenida** (`dashboard/index.html`): saludo según la hora y accesos a "Nueva venta" y "Cierre diario" (este último solo para admin/supervisor).
+- **Topbar**: fecha en español e iniciales del usuario como avatar.
+- **Sidebar**: estado de caja con punto que late (abierta) y botón destacado "Nueva venta".
+
+Accesibilidad: todas las animaciones se apagan con
+`@media (prefers-reduced-motion: reduce)`, y el contador no se ejecuta en
+ese caso (el número real ya viene renderizado desde el servidor, así que sin
+JavaScript la página sigue mostrando los valores correctos).
+
 ---
 
 ## 8. Seguridad y límites conocidos

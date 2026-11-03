@@ -7,6 +7,23 @@ con arqueo, inventario en tiempo real con alertas de stock mínimo y
 vencimiento, programa de puntos para clientes frecuentes, y reportes de
 cierre diario exportables a PDF/Excel.
 
+## 🎬 Demo en video
+
+Tutorial paso a paso (vertical, ~40 s), grabado sobre el sistema real:
+
+[![Ver el video tutorial](docs/video/portada.jpg)](docs/video/tutorial-pos-licoreria.mp4)
+
+▶️ **[Ver el video tutorial](docs/video/tutorial-pos-licoreria.mp4)**
+
+## 📸 Capturas
+
+| | |
+|---|---|
+| ![Login a pantalla dividida](docs/capturas/login.jpg) | ![Dashboard con saludo y KPI animados](docs/capturas/dashboard.jpg) |
+| *Login a pantalla dividida* | *Dashboard con saludo y KPI animados* |
+| ![Pantalla de venta táctil](docs/capturas/venta.jpg) | ![Inventario de productos](docs/capturas/productos.jpg) |
+| *Pantalla de venta táctil* | *Inventario de productos* |
+
 ## Stack
 
 - **Backend:** Python + Flask (arquitectura MVC)
@@ -78,15 +95,19 @@ POS): teléfono `5551112222` (45 pts) y `5553334444` (120 pts).
 7. **Cierre diario** (`/reportes/cierre-diario`): resumen exportable a PDF
    y Excel.
 
-## Paleta de diseño
+## Diseño visual
 
-| Color               | Hex       | Uso                                    |
-|----------------------|-----------|------------------------------------------|
-| Vino tinto             | `#722F37` | Sidebar, encabezados, botón primario      |
-| Grafito                  | `#2B2B2B` | Caja de total, texto principal            |
-| Dorado sutil              | `#C9A227` | Acentos, botón de completar venta, KPI    |
-| Blanco cálido               | `#FAF8F5` | Fondo de tarjetas y paneles               |
+| Color | Hex | Uso |
+|---|---|---|
+| Tinta nocturna | `#0F1B2D` | Sidebar, encabezados, botón de ingreso |
+| Ámbar whisky | `#E0A93B` | Acentos, "Nueva venta", total a pagar |
+| Vino | `#8E2C48` | Acento secundario en fondos y gráficos |
+| Crema | `#F4F1EC` | Fondo general |
 
-Definida en `app/static/css/variables.css`. La pantalla de venta usa
-botones grandes y un teclado numérico táctil pensado para uso en tablet de
-mostrador.
+Tipografía **Plus Jakarta Sans**. Estilo "bar nocturno": sidebar oscura con brillo ámbar, login a pantalla dividida, banner de bienvenida según la hora del día y botón destacado de "Nueva venta". La pantalla de venta mantiene botones grandes y teclado numérico táctil para tablet de mostrador.
+
+**Animaciones** (`app/static/css/animaciones.css` + `app/static/js/animaciones.js`):
+contadores que suben desde 0 en los indicadores, elementos que flotan,
+destello en los botones principales, paneles que aparecen al hacer scroll y
+puntos "en vivo". Todas se desactivan solas si el usuario tiene activada la
+opción del sistema operativo de **reducir movimiento**.
